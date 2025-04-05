@@ -62,6 +62,7 @@ android/captures/
 
 # Test/coverage
 coverage/
+.metadata
 
 # Dotenv & bazy lokalne
 .env
@@ -70,3 +71,4 @@ coverage/
 # Tymczasowe
 *.tmp
 *.bak
+
