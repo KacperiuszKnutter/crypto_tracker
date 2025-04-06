@@ -44,6 +44,26 @@ class DatabaseService {
     return sha256.convert(utf8.encode(password)).toString();
   }
 
+  Future<UserModel?> findUserbyEmail(String? uid) async{
+    if (uid == null) return null; // jeśli nie ma zalogowanego użytkownika
+
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'crypto_tracker.db');
+    final db = await openDatabase(path);
+
+    final result = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [uid],
+    );
+    //jeśli znaleziono użytkownika o takim mailu to zwróć wszystkie dane o nim
+    if(result.isNotEmpty){
+      return UserModel.fromMap(result.first);
+    }
+
+    return null;
+  }
+
   Future<bool> registerUser(String username, String email, String password) async {
     final dbClient = await db;
 

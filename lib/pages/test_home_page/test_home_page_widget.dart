@@ -611,16 +611,16 @@ class _TestHomePageWidgetState extends State<TestHomePageWidget>
                     ),
                     child: Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(20.0, 10.0, 20.0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: FlutterFlowIconButton(
                               borderColor: Color(0xFFEEC860),
-                              borderRadius: 8.0,
+                              borderRadius: 40.0,
                               buttonSize: 60.0,
                               fillColor: Color(0xFF3A3A48),
                               icon: Icon(
@@ -634,7 +634,7 @@ class _TestHomePageWidgetState extends State<TestHomePageWidget>
                             ),
                           ),
                           Text(
-                            'Zacznijmy pracę Kacper!',
+                            'Zacznijmy pracę!',
                             style: FlutterFlowTheme.of(context)
                                 .titleMedium
                                 .override(
@@ -644,7 +644,7 @@ class _TestHomePageWidgetState extends State<TestHomePageWidget>
                                   letterSpacing: 0.0,
                                 ),
                           ),
-                        ].divide(SizedBox(width: 15.0)),
+                        ].divide(SizedBox(width: 30.0)),
                       ),
                     ),
                   ),
@@ -699,39 +699,39 @@ class _TestHomePageWidgetState extends State<TestHomePageWidget>
                       Container(
                         width: 350.0,
                         height: 300.0,
-                        child: FlutterFlowLineChart(
-                          data: [
-                            FFLineChartData(
-                              xData: functions.getChartData(),
-                              yData: functions.getChartData(),
-                              settings: LineChartBarData(
-                                color: Color(0xFFEFD239),
-                                barWidth: 3.0,
-                                isCurved: true,
-                                preventCurveOverShooting: true,
-                                dotData: FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  color: Color(0x4CEFD539),
-                                ),
-                              ),
-                            )
-                          ],
-                          chartStylingInfo: ChartStylingInfo(
-                            backgroundColor: Color(0xFF3A3A48),
-                            showGrid: true,
-                            borderColor:
-                                FlutterFlowTheme.of(context).secondaryText,
-                            borderWidth: 1.0,
-                          ),
-                          axisBounds: AxisBounds(),
-                          xAxisLabelInfo: AxisLabelInfo(
-                            reservedSize: 32.0,
-                          ),
-                          yAxisLabelInfo: AxisLabelInfo(
-                            reservedSize: 40.0,
-                          ),
-                        ),
+                        // child: FlutterFlowLineChart(
+                        //   data: [
+                        //     FFLineChartData(
+                        //       xData: functions.getChartData(),
+                        //       yData: functions.getChartData(),
+                        //       settings: LineChartBarData(
+                        //         color: Color(0xFFEFD239),
+                        //         barWidth: 3.0,
+                        //         isCurved: true,
+                        //         preventCurveOverShooting: true,
+                        //         dotData: FlDotData(show: false),
+                        //         belowBarData: BarAreaData(
+                        //           show: true,
+                        //           color: Color(0x4CEFD539),
+                        //         ),
+                        //       ),
+                        //     )
+                        //   ],
+                        //   chartStylingInfo: ChartStylingInfo(
+                        //     backgroundColor: Color(0xFF3A3A48),
+                        //     showGrid: true,
+                        //     borderColor:
+                        //         FlutterFlowTheme.of(context).secondaryText,
+                        //     borderWidth: 1.0,
+                        //   ),
+                        //   axisBounds: AxisBounds(),
+                        //   xAxisLabelInfo: AxisLabelInfo(
+                        //     reservedSize: 32.0,
+                        //   ),
+                        //   yAxisLabelInfo: AxisLabelInfo(
+                        //     reservedSize: 40.0,
+                        //   ),
+                        // ),
                       ),
                     ].divide(SizedBox(height: 10.0)),
                   ),

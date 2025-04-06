@@ -34,6 +34,10 @@ class CustomAuthManager {
     persistAuthData();
   }
 
+  String? getCurrentUid() {
+    return uid;
+  }
+
   Future<CryptoTrackerAuthUser?> signIn({
     String? authenticationToken,
     String? refreshToken,

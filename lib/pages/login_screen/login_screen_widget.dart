@@ -355,8 +355,19 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                           authUid: email,
                                         );
 
+
                                         if (context.mounted) {
-                                          context.goNamedAuth(TestHomePageWidget.routeName, context.mounted);
+                                          context.goNamedAuth(
+                                            TestHomePageWidget.routeName,
+                                            context.mounted,
+                                            extra: <String, dynamic>{
+                                              kTransitionInfoKey: TransitionInfo(
+                                                hasTransition: true,
+                                                transitionType: PageTransitionType.fade,
+                                                duration: Duration(milliseconds: 500),
+                                              ),
+                                            },
+                                          );
                                         }
                                       } else {
                                         Fluttertoast.showToast(
