@@ -619,10 +619,10 @@ class _TestHomePageWidgetState extends State<TestHomePageWidget>
                           Align(
                             alignment: AlignmentDirectional(0.0, 0.0),
                             child: FlutterFlowIconButton(
-                              borderColor: Color(0xFFEEC860),
+                              borderColor: Colors.white,
                               borderRadius: 40.0,
                               buttonSize: 60.0,
-                              fillColor: Color(0xFF3A3A48),
+                              fillColor: Colors.white,
                               icon: Icon(
                                 Icons.manage_accounts_rounded,
                                 color: Color(0xFFEDD15C),

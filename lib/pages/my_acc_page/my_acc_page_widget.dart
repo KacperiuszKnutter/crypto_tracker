@@ -155,12 +155,15 @@ class _MyAccPageWidgetState extends State<MyAccPageWidget> {
                                 padding: EdgeInsets.all(2.0),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50.0),
-                                  child: CachedNetworkImage(
-                                    imageUrl: '', // możesz dodać URL avatara, jeśli masz
-                                    width: 60.0,
-                                    height: 60.0,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: Color(0xFFE0E0E0), // szary kolor tła
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 30.0,
+                                        color: Colors.grey[700],
+                                      ),
+                                  )
                                 ),
                               ),
                             ),
