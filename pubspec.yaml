@@ -23,9 +23,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^17.2.3
+  timezone: ^0.9.4
   flutter_localizations:
     sdk: flutter
   flutter_web_plugins:
+
     sdk: flutter
   auto_size_text: ^3.0.0
   cached_network_image: 3.4.1
@@ -133,4 +136,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

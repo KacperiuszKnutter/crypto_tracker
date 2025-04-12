@@ -1,6 +1,7 @@
 import '../../auth/custom_auth/auth_util.dart';
 import '../../backend/db/db_service.dart';
 import '../../backend/db/user_model.dart';
+import '../notification_popup/simple_popup_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -281,6 +282,14 @@ class _MyAccPageWidgetState extends State<MyAccPageWidget> {
                   ),
                 ),
               ),
+              GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true, // kliknięcie poza zamyka popup
+                      builder: (BuildContext context) => const SimplePopupWidget(),
+                    );
+                  }, child:
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: Container(
@@ -341,6 +350,7 @@ class _MyAccPageWidgetState extends State<MyAccPageWidget> {
                     ),
                   ),
                 ),
+              ),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
