@@ -13,11 +13,13 @@ const _kTokenExpirationKey = '_auth_token_expiration_';
 const _kUidKey = '_auth_uid_';
 const _kUserDataKey = '_auth_user_data_';
 
+
 class CustomAuthManager {
   // Auth session attributes
   String? authenticationToken;
   String? refreshToken;
   DateTime? tokenExpiration;
+
   // User attributes
   String? uid;
 
@@ -103,6 +105,7 @@ class CustomAuthManager {
               _prefs.getInt(_kTokenExpirationKey)!)
           : null;
       uid = _prefs.getString(_kUidKey);
+
     } catch (e) {
       if (kDebugMode) {
         print('Error initializing auth: $e');
@@ -120,6 +123,8 @@ class CustomAuthManager {
     cryptoTrackerAuthUserSubject.add(updatedUser);
   }
 
+
+
   void persistAuthData() {
     authenticationToken != null
         ? _prefs.setString(_kAuthTokenKey, authenticationToken!)
@@ -133,6 +138,7 @@ class CustomAuthManager {
         : _prefs.remove(_kTokenExpirationKey);
     uid != null ? _prefs.setString(_kUidKey, uid!) : _prefs.remove(_kUidKey);
   }
+
 }
 
 CryptoTrackerAuthUser? currentUser;

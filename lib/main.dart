@@ -6,14 +6,85 @@ import 'package:path/path.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'auth/custom_auth/auth_util.dart';
 import 'auth/custom_auth/custom_auth_user_provider.dart';
 
 import '/flutter_flow/flutter_flow_theme.dart';
+import 'backend/api_request_handler.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/nav/nav.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'index.dart';
+import 'notifications/notifications_manager.dart';
+
+//to musi byc globalnie
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  // Workmanager jest niezbędny do robienia task scheduling w tle (wysyłanie powiadomień)
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      // Sprawdzamy, czy inputData zawiera niezbędne dane
+      if (inputData == null) {
+        print("Brak danych wejściowych.");
+        return Future.value(false);
+      }
+
+      final cryptoId = inputData['cryptoId'];
+      final targetPrice = double.tryParse(inputData['targetPrice'] ?? '');
+      final fiat = inputData['fiat'] ?? 'usd';
+
+      // Sprawdzamy, czy wszystkie dane są poprawne
+      if (cryptoId == null || targetPrice == null) {
+        print("Brak wymaganych danych: cryptoId lub targetPrice.");
+        return Future.value(false);
+      }
+
+      // Wykonujemy zadanie API
+      final success = await apiTask(cryptoId, targetPrice, fiat);
+      return Future.value(success);
+    } catch (e) {
+      print("Błąd w callbackDispatcher: $e");
+      return Future.value(false);
+    }
+  });
+}
+
+Future<bool> apiTask(String cryptoId, double targetPrice, String fiat) async {
+  try {
+    // Pobieranie ceny z API
+    final priceFetcher = ApiRequestHandler();
+    final currentPrice = await priceFetcher.fetchCryptoPrice(
+      cryptoId: cryptoId,
+      fiatCurrency: fiat,
+    );
+
+    if (currentPrice == null) {
+      print("Nie udało się pobrać ceny.");
+      return false;
+    }
+
+    // Sprawdzamy, czy cena osiągnęła próg
+    if (currentPrice >= targetPrice) {
+      final notificationHandler = NotificationHandler();
+      await notificationHandler.initializeNotification();
+      await notificationHandler.configureLocalTimeZone();
+
+      await notificationHandler.showSimpleNotification(
+        title: '$cryptoId',
+        body: 'Cena osiągnęła próg: $targetPrice $fiat (obecnie: $currentPrice)',
+      );
+      return true;
+    } else {
+      print("Cena $cryptoId: $currentPrice, nie osiągnęła progu $targetPrice.");
+      return false;
+    }
+  } catch (e) {
+    print("Błąd w apiTask: $e");
+    return false;
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,13 +98,23 @@ void main() async {
 
   await FlutterFlowTheme.initialize();
 
-  await authManager.initialize();
+  //authManager jako singleton, nie ruszac go juz
+  await Future.wait([
+    authManager.initialize(),
+  ]);
+  await dotenv.load();
+
   //zawsze musimy uzupełnić dane o użytkowniku bo nie nastapi init
   //pierwszego ekranu
   AppStateNotifier.instance.update(CryptoTrackerAuthUser(loggedIn: false, uid: null));
   //potem mozemy juz wylogowac sie zeby w AuthManager nie przechowyac nic o
   //obecnnym uztkowniku
   await authManager.signOut();
+
+
+  //w main inicjalizujemy workManager jego callback zdefiniowany wyzej
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
 
   runApp(MyApp());
 }

@@ -1,3 +1,5 @@
+import 'package:crypto_tracker/pages/notification_popup/set_region_popup.dart';
+
 import '../../auth/custom_auth/auth_util.dart';
 import '../../backend/db/db_service.dart';
 import '../../backend/db/user_model.dart';
@@ -221,6 +223,14 @@ class _MyAccPageWidgetState extends State<MyAccPageWidget> {
                       ),
                 ),
               ),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true, // kliknięcie poza zamyka popup
+                builder: (BuildContext context) => const SetRegionPopup(),
+              );
+            }, child:
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                 child: Container(
@@ -282,6 +292,7 @@ class _MyAccPageWidgetState extends State<MyAccPageWidget> {
                   ),
                 ),
               ),
+          ),
               GestureDetector(
                   onTap: () {
                     showDialog(

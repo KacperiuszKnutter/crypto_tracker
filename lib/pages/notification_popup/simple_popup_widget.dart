@@ -1,8 +1,10 @@
 // simple_popup_widget.dart
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:workmanager/workmanager.dart';
+import '../../lazy_globals.dart';
 
-import '../../notifications/notifications_manager.dart';
+
 
 class SimplePopupWidget extends StatefulWidget {
   const SimplePopupWidget({super.key});
@@ -14,6 +16,12 @@ class SimplePopupWidget extends StatefulWidget {
 class _SimplePopupWidgetState extends State<SimplePopupWidget> {
   String selectedCurrency = 'Bitcoin';
   final TextEditingController _priceController = TextEditingController();
+  String selectedPriceToHit = '';
+
+
+  //gettery potrzebne dla API calls Handler
+  String get currentCurrency => selectedCurrency;
+  String get currentPriceToHit => _priceController.text.trim();
 
   @override
   void dispose() {
@@ -21,8 +29,11 @@ class _SimplePopupWidgetState extends State<SimplePopupWidget> {
     super.dispose();
   }
 
+
+
   void _submitAlert() async {
     final priceText = _priceController.text.trim();
+    final fiat = selectedRegionCurrencyNotifier.value ?? 'USD';
 
     if (priceText.isEmpty || double.tryParse(priceText) == null) {
       Fluttertoast.showToast(
@@ -36,16 +47,23 @@ class _SimplePopupWidgetState extends State<SimplePopupWidget> {
     final selectedCrypto = selectedCurrency; // Zmienna z dropdowna np. 'Bitcoin'
 
     // Inicjalizacja handlera powiadomień
-    final notificationHandler = new NotificationHandler();
-    await notificationHandler.initializeNotification();
+    //final notificationHandler = new NotificationHandler();
+    //await notificationHandler.initializeNotification();
 
     // opcjonalnie, tylko raz na aplikację
-    await notificationHandler.configureLocalTimeZone();
+    //await notificationHandler.configureLocalTimeZone();
 
-    // Wywołanie testowego powiadomienia natychmiast
-    await notificationHandler.showSimpleNotification(
-      title: '$selectedCrypto',
-      body: 'Osiągnęła oczekiwaną kwotę: $enteredPrice USD',
+    // Zaplanowanie wysyłania requestów co 15 min w celu sprawdzenia ceny
+    await Workmanager().cancelByUniqueName("checkCryptoPrice_$selectedCrypto");
+    await Workmanager().registerPeriodicTask(
+      "checkCryptoPrice_$selectedCrypto", // unikalna nazwa
+      "getSimplePrice", // nazwa zadania
+      frequency: const Duration(minutes: 15), // minimalnie 15 na Androidzie
+      inputData: {
+        'cryptoId': selectedCrypto,
+        'targetPrice': enteredPrice.toString(),
+        'fiat': fiat,
+      },
     );
 
     Fluttertoast.showToast(
