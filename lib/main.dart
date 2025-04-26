@@ -28,11 +28,11 @@ void callbackDispatcher() {
       // Sprawdzamy, czy inputData zawiera niezbędne dane
       if (inputData == null) {
         print("Brak danych wejściowych.");
-        return Future.value(false);
+        return Future.value(true);
       }
 
       final cryptoId = inputData['cryptoId'];
-      final targetPrice = double.tryParse(inputData['targetPrice'] ?? '');
+      final targetPrice = double.tryParse(inputData['targetPrice']);
       final fiat = inputData['fiat'] ?? 'usd';
 
       // Sprawdzamy, czy wszystkie dane są poprawne
@@ -55,29 +55,35 @@ Future<bool> apiTask(String cryptoId, double targetPrice, String fiat) async {
   try {
     // Pobieranie ceny z API
     final priceFetcher = ApiRequestHandler();
-    final currentPrice = await priceFetcher.fetchCryptoPrice(
+    final (FetchCryptoPriceResult result, double? currentPrice) = await priceFetcher.fetchCryptoPrice(
       cryptoId: cryptoId,
       fiatCurrency: fiat,
     );
 
-    if (currentPrice == null) {
-      print("Nie udało się pobrać ceny.");
-      return false;
-    }
+    // Sprawdzamy, czy pobieranie ceny zakończyło się sukcesem
+    if (result == FetchCryptoPriceResult.success) {
+      if (currentPrice != null) {
+        // Sprawdzamy, czy cena osiągnęła próg
+        if (currentPrice >= targetPrice) {
+          final notificationHandler = NotificationHandler();
+          await notificationHandler.initializeNotification();
+          await notificationHandler.configureLocalTimeZone();
 
-    // Sprawdzamy, czy cena osiągnęła próg
-    if (currentPrice >= targetPrice) {
-      final notificationHandler = NotificationHandler();
-      await notificationHandler.initializeNotification();
-      await notificationHandler.configureLocalTimeZone();
-
-      await notificationHandler.showSimpleNotification(
-        title: '$cryptoId',
-        body: 'Cena osiągnęła próg: $targetPrice $fiat (obecnie: $currentPrice)',
-      );
-      return true;
+          await notificationHandler.showSimpleNotification(
+            title: '$cryptoId',
+            body: 'Cena osiągnęła próg: $targetPrice $fiat (obecnie: $currentPrice)',
+          );
+          return true;
+        } else {
+          print("Cena $cryptoId: $currentPrice, nie osiągnęła progu $targetPrice.");
+          return false;
+        }
+      } else {
+        print("Cena jest nullem mimo sukcesu");
+        return false;
+      }
     } else {
-      print("Cena $cryptoId: $currentPrice, nie osiągnęła progu $targetPrice.");
+      print("Błąd pobierania ceny dla $cryptoId: $result");
       return false;
     }
   } catch (e) {
@@ -113,7 +119,7 @@ void main() async {
 
 
   //w main inicjalizujemy workManager jego callback zdefiniowany wyzej
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 
 
   runApp(MyApp());

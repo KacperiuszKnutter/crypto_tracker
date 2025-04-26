@@ -67,7 +67,7 @@ class _SimplePopupWidgetState extends State<SimplePopupWidget> {
     );
 
     Fluttertoast.showToast(
-      msg: 'Powiadomienie testowe wysłane!',
+      msg: 'Powiadomienie ustawione!',
       gravity: ToastGravity.BOTTOM,
     );
 
@@ -104,7 +104,7 @@ class _SimplePopupWidgetState extends State<SimplePopupWidget> {
                       selectedCurrency = newValue!;
                     });
                   },
-                  items: <String>['Bitcoin', 'DodgeCoin', 'Etherum', 'XRP', 'Solana']
+                  items: <String>['Bitcoin', 'DodgeCoin', 'Etherum', 'XRP', 'Solana','Tether','BNB','USDC','Cardano','Pepe']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,

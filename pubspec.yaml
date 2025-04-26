@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_local_notifications: ^17.2.3
+  syncfusion_flutter_charts: ^29.1.39
   timezone: ^0.9.4
   flutter_localizations:
     sdk: flutter

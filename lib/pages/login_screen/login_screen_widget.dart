@@ -363,7 +363,7 @@ class _LoginScreenWidgetState extends State<LoginScreenWidget> {
                                             extra: <String, dynamic>{
                                               kTransitionInfoKey: TransitionInfo(
                                                 hasTransition: true,
-                                                transitionType: PageTransitionType.fade,
+                                                transitionType: PageTransitionType.leftToRight,
                                                 duration: Duration(milliseconds: 500),
                                               ),
                                             },
